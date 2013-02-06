@@ -36,7 +36,7 @@ public class WebServlet extends HttpServlet {
         void processRequest(T resource) throws IOException;
 
         interface RequestHandlerFactory<T> {
-            RequestHandler<T> openRequestHandler(WebEnvironment environment);
+            RequestHandler<T> openRequestHandler(WebEnvironment environment) throws IOException;
         }
     }
 
