@@ -16,4 +16,12 @@ public class WebRequest extends HttpServletRequestWrapper {
     public Parameters getParameters() {
         return new Parameters(getParameterMap());
     }
+
+    public boolean isGet() {
+        return getMethod().equals("GET");
+    }
+
+    public boolean isPost() {
+        return getMethod().equals("POST");
+    }
 }

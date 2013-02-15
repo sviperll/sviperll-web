@@ -9,73 +9,67 @@ import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sviperll.web.ResourceParser.ResourceParserException;
-import org.sviperll.web.WebServlet.RequestHandler.RequestHandlerFactory;
+import org.sviperll.web.Router.ResourceParserException;
 
 public class WebServlet extends HttpServlet {
-    private final ResourceDefinition<?> resourceDefinition;
-    private final Layout layout;
+    public static <T, R extends Router<T>, V extends LayoutFactory<T>> WebServlet createInstance(RequestEnvironmentFactory<T, R, V> environment) {
+        return new WebServlet(new RequestEnvironmentHolder<T, R, V>(environment));
+    }
 
-    public WebServlet(ResourceDefinition<?> resourceDefinition, Layout layout) {
-        this.resourceDefinition = resourceDefinition;
-        this.layout = layout;
+    private final RequestEnvironmentHolder<?, ?, ?> requestEnvironment;
+
+    public WebServlet(RequestEnvironmentHolder<?, ?, ?> requestEnvironment) {
+        this.requestEnvironment = requestEnvironment;
     }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        WebEnvironment environment = new WebEnvironment(new WebRequest(req), new WebResponse(resp, layout));
-        String path = req.getRequestURI();
-        if (path.startsWith("/"))
-            path = path.substring(1);
-        String[] resourcePath = path.split("/");
-        Responder responder = resourceDefinition.createResponder(environment);
-        responder.respond(resourcePath);
+        requestEnvironment.respond(ResourcePath.createInstance(req.getRequestURI()), req, resp);
     }
 
-    public interface RequestHandler<T> extends Closeable {
+    public interface RequestHandler<T> {
         void processRequest(T resource) throws IOException;
-
-        interface RequestHandlerFactory<T> {
-            RequestHandler<T> openRequestHandler(WebEnvironment environment) throws IOException;
-        }
     }
 
-    public static class ResourceDefinition<T> {
-        private final ResourceParser<T> resourceParser;
-        private final RequestHandlerFactory<T> handlerFactory;
-
-        public ResourceDefinition(ResourceParser<T> resourceParser, RequestHandlerFactory<T> handlerFactory) {
-            this.resourceParser = resourceParser;
-            this.handlerFactory = handlerFactory;
-        }
-
-        Responder createResponder(WebEnvironment environment) {
-            return new Responder<T>(resourceParser, handlerFactory, environment);
-        }
+    public interface RequestEnvironmentFactory<T, R extends Router<T>, V extends LayoutFactory<T>> {
+        RequestEnvironment<T, R, V> createRequestEnvironment() throws IOException;
     }
 
-    private static class Responder<T> {
-        private final RequestHandlerFactory<T> handlerFactory;
-        private final WebEnvironment environment;
-        private final ResourceParser<T> resourceParser;
+    public interface LayoutFactory<T> {
+        Layout createLayout(T resource);
+    }
 
-        Responder(ResourceParser<T> resourceParser, RequestHandlerFactory<T> handlerFactory, WebEnvironment environment) {
-            this.handlerFactory = handlerFactory;
-            this.environment = environment;
-            this.resourceParser = resourceParser;
+    public interface RequestEnvironment<T, R extends Router<T>, V extends LayoutFactory<T>> extends Closeable {
+        R createRouter();
+        V createViewDefinition(R router) throws IOException;
+        RequestHandler<T> createRequestHandler(R router, V views, WebEnvironment web) throws IOException;
+    }
+
+    public static class RequestEnvironmentHolder<T, R extends Router<T>, V extends LayoutFactory<T>> {
+        public static <T, R extends Router<T>, V extends LayoutFactory<T>> RequestEnvironmentHolder<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environment) {
+            return new RequestEnvironmentHolder<T, R, V>(environment);
         }
 
-        void respond(String[] resourcePath) throws IOException {
+        private final RequestEnvironmentFactory<T, R, V> requestEnvironmentFactory;
+
+        public RequestEnvironmentHolder(RequestEnvironmentFactory<T, R, V> requestEnvironmentFactory) {
+            this.requestEnvironmentFactory = requestEnvironmentFactory;
+        }
+
+        void respond(ResourcePath resourcePath, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+            RequestEnvironment<T, R, V> environment = requestEnvironmentFactory.createRequestEnvironment();
             try {
-                T resource = resourceParser.parseResource(resourcePath);
-                RequestHandler<T> handler = handlerFactory.openRequestHandler(environment);
-                try {
-                    handler.processRequest(resource);
-                } finally {
-                    handler.close();
-                }
+                R router = environment.createRouter();
+                T resource = router.parseResource(resourcePath);
+                V views = environment.createViewDefinition(router);
+                Layout layout = views.createLayout(resource);
+                WebEnvironment web = new WebEnvironment(new WebRequest(req), new WebResponse(resp, layout));
+                RequestHandler<T> handler = environment.createRequestHandler(router, views, web);
+                handler.processRequest(resource);
             } catch (ResourceParserException ex) {
-                throw new IOException(ex);
+                resp.sendError(404);
+            } finally {
+                environment.close();
             }
         }
     }

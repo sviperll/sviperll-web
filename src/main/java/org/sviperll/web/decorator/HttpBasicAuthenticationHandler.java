@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.handler;
+package org.sviperll.web.decorator;
 
 import java.io.IOException;
 import org.sviperll.io.Base64;
@@ -13,21 +13,16 @@ import org.sviperll.web.WebServlet.RequestHandler;
 public class HttpBasicAuthenticationHandler<T> implements RequestHandler<T> {
     private static final String BASIC_METHOD_STRING = "Basic";
     private final RequestHandler<T> handler;
-    private final WebEnvironment environment;
     private final AuthenticationCredentials credentials;
-    public HttpBasicAuthenticationHandler(RequestHandler<T> handler, AuthenticationCredentials credentials, WebEnvironment environment) {
+    private final WebEnvironment web;
+    public HttpBasicAuthenticationHandler(RequestHandler<T> handler, AuthenticationCredentials credentials, WebEnvironment web) {
         this.handler = handler;
-        this.environment = environment;
         this.credentials = credentials;
-    }
-
-    @Override
-    public void close() throws IOException {
-        handler.close();
+        this.web = web;
     }
 
     private boolean isAuthenticated() {
-        String header = environment.request().getHeader("Authorization");
+        String header = web.request().getHeader("Authorization");
         if (header == null)
             return false;
         else {
@@ -42,8 +37,8 @@ public class HttpBasicAuthenticationHandler<T> implements RequestHandler<T> {
     }
 
     private void sendNotAuthenticated() throws IOException {
-        environment.response().setHeader("WWW-Authenticate", "Basic realm=\"" + credentials.realm + "\"");
-        environment.response().sendError(401);
+        web.response().setHeader("WWW-Authenticate", "Basic realm=\"" + credentials.realm + "\"");
+        web.response().sendError(401);
     }
 
     @Override

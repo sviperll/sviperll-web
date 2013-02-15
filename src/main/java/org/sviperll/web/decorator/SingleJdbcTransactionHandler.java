@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.handler;
+package org.sviperll.web.decorator;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -46,10 +46,5 @@ public class SingleJdbcTransactionHandler<T> implements RequestHandler<T> {
         } catch (SQLException ex) {
             throw new IOException(ex);
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        handler.close();
     }
 }

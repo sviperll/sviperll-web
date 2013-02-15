@@ -15,6 +15,8 @@ public class DataSources {
             ComboPooledDataSource pool = new ComboPooledDataSource();
             pool.setDriverClass(driver.getName());
             pool.setJdbcUrl(url);
+            pool.setMaxIdleTime(3600);
+            pool.setIdleConnectionTestPeriod(120);
             pool.setMaxStatements(180);
             return pool;
         } catch (PropertyVetoException ex) {
