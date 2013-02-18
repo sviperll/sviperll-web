@@ -11,8 +11,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sviperll.collection.ByteBufferPool;
-import org.sviperll.collection.ByteBufferPool.ByteBuffer;
+import org.sviperll.collection.ByteBufferAllocator;
+import org.sviperll.collection.ByteBufferAllocator.ByteBuffer;
 
 public class JavaClassResourceServlet extends HttpServlet {
     private static String concatPath(String base, String relative) {
@@ -62,10 +62,10 @@ public class JavaClassResourceServlet extends HttpServlet {
     }
 
     public static class JavaClassResourceLoader {
-        private final ByteBufferPool bufferPool;
+        private final ByteBufferAllocator bufferPool;
         private final Class<?> classLoader;
 
-        public JavaClassResourceLoader(Class<?> classLoader, ByteBufferPool bufferPool) {
+        public JavaClassResourceLoader(Class<?> classLoader, ByteBufferAllocator bufferPool) {
             this.classLoader = classLoader;
             this.bufferPool = bufferPool;
         }
