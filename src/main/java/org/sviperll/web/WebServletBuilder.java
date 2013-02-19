@@ -5,13 +5,13 @@
 package org.sviperll.web;
 
 import java.util.logging.Logger;
-import org.sviperll.web.WebServlet.LayoutFactory;
+import org.sviperll.web.WebServlet.WebViews;
 import org.sviperll.web.WebServlet.RequestEnvironmentFactory;
 import org.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
 import org.sviperll.web.decorator.RequestEnvironmentFactoryDecorator;
 
 public class WebServletBuilder {
-    public static <T, R extends Router<T>, V extends LayoutFactory<T>> WebServletBuilder createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
+    public static <T, R extends Router<T>, V extends WebViews<T, R>> WebServletBuilder createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
         return new WebServletBuilder(RequestEnvironmentFactoryDecorator.createInstance(environmentFactory));
     }
 

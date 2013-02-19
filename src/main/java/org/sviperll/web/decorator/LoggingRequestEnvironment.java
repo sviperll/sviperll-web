@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import org.sviperll.web.Router;
 import org.sviperll.web.WebEnvironment;
-import org.sviperll.web.WebServlet.LayoutFactory;
+import org.sviperll.web.WebServlet.WebViews;
 import org.sviperll.web.WebServlet.RequestEnvironment;
 import org.sviperll.web.WebServlet.RequestHandler;
 
-public class LoggingRequestEnvironment<T, R extends Router<T>, V extends LayoutFactory<T>> implements RequestEnvironment<T, R, V> {
+public class LoggingRequestEnvironment<T, R extends Router<T>, V extends WebViews<T, R>> implements RequestEnvironment<T, R, V> {
     private final RequestEnvironment<T, R, V> requestEnvironment;
     private final Logger logger;
     public LoggingRequestEnvironment(RequestEnvironment<T, R, V> requestEnvironment, Logger logger) {
@@ -26,13 +26,13 @@ public class LoggingRequestEnvironment<T, R extends Router<T>, V extends LayoutF
     }
 
     @Override
-    public V createViewDefinition(R router) throws IOException {
-        return requestEnvironment.createViewDefinition(router);
+    public V createViews(R router) throws IOException {
+        return requestEnvironment.createViews(router);
     }
 
     @Override
-    public RequestHandler<T> createRequestHandler(R router, V views, WebEnvironment web) throws IOException {
-        return new LoggingHandler<T>(requestEnvironment.createRequestHandler(router, views, web), logger, router, web);
+    public RequestHandler<T> createRequestHandler(V views, WebEnvironment web) throws IOException {
+        return new LoggingHandler<T>(requestEnvironment.createRequestHandler(views, web), logger, views.router(), web);
     }
 
     @Override

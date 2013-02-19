@@ -7,12 +7,12 @@ package org.sviperll.web.decorator;
 import java.io.IOException;
 import org.sviperll.web.Router;
 import org.sviperll.web.WebEnvironment;
-import org.sviperll.web.WebServlet.LayoutFactory;
+import org.sviperll.web.WebServlet.WebViews;
 import org.sviperll.web.WebServlet.RequestEnvironment;
 import org.sviperll.web.WebServlet.RequestHandler;
 import org.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
 
-public class HttpBasicAuthenticationRequestEnvironment<T, R extends Router<T>, V extends LayoutFactory<T>> implements RequestEnvironment<T, R, V> {
+public class HttpBasicAuthenticationRequestEnvironment<T, R extends Router<T>, V extends WebViews<T, R>> implements RequestEnvironment<T, R, V> {
     private final RequestEnvironment<T, R, V> requestEnvironment;
     private final AuthenticationCredentials credentials;
     public HttpBasicAuthenticationRequestEnvironment(RequestEnvironment<T, R, V> requestEnvironment, AuthenticationCredentials credentials) {
@@ -26,13 +26,13 @@ public class HttpBasicAuthenticationRequestEnvironment<T, R extends Router<T>, V
     }
 
     @Override
-    public V createViewDefinition(R router) throws IOException {
-        return requestEnvironment.createViewDefinition(router);
+    public V createViews(R router) throws IOException {
+        return requestEnvironment.createViews(router);
     }
 
     @Override
-    public RequestHandler<T> createRequestHandler(R router, V views, WebEnvironment web) throws IOException {
-        return new HttpBasicAuthenticationHandler<T>(requestEnvironment.createRequestHandler(router, views, web), credentials, web);
+    public RequestHandler<T> createRequestHandler(V views, WebEnvironment web) throws IOException {
+        return new HttpBasicAuthenticationHandler<T>(requestEnvironment.createRequestHandler(views, web), credentials, web);
     }
 
     @Override

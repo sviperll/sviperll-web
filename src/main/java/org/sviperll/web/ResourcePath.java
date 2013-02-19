@@ -76,4 +76,13 @@ public class ResourcePath {
         }
         return sb.toString();
     }
+
+    public boolean startsWith(ResourcePath prefix) {
+        if (this.segments.length < prefix.segments.length)
+            return false;
+        for (int i = 0; i < prefix.segments.length; i++)
+            if (!this.segments[i].equals(prefix.segments[i]))
+                return false;
+        return true;
+    }
 }

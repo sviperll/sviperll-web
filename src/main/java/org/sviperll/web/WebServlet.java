@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.sviperll.web.Router.ResourceParserException;
 
 public class WebServlet extends HttpServlet {
-    public static <T, R extends Router<T>, V extends LayoutFactory<T>> WebServlet createInstance(RequestEnvironmentFactory<T, R, V> environment) {
+    public static <T, R extends Router<T>, V extends WebViews<T, R>> WebServlet createInstance(RequestEnvironmentFactory<T, R, V> environment) {
         return new WebServlet(new RequestEnvironmentHolder<T, R, V>(environment));
     }
 
@@ -31,22 +31,23 @@ public class WebServlet extends HttpServlet {
         void processRequest(T resource) throws IOException;
     }
 
-    public interface RequestEnvironmentFactory<T, R extends Router<T>, V extends LayoutFactory<T>> {
+    public interface RequestEnvironmentFactory<T, R extends Router<T>, V extends WebViews<T, R>> {
         RequestEnvironment<T, R, V> createRequestEnvironment() throws IOException;
     }
 
-    public interface LayoutFactory<T> {
+    public interface WebViews<T, R> {
         Layout createLayout(T resource);
+        R router();
     }
 
-    public interface RequestEnvironment<T, R extends Router<T>, V extends LayoutFactory<T>> extends Closeable {
+    public interface RequestEnvironment<T, R extends Router<T>, V extends WebViews<T, R>> extends Closeable {
         R createRouter();
-        V createViewDefinition(R router) throws IOException;
-        RequestHandler<T> createRequestHandler(R router, V views, WebEnvironment web) throws IOException;
+        V createViews(R router) throws IOException;
+        RequestHandler<T> createRequestHandler(V views, WebEnvironment web) throws IOException;
     }
 
-    public static class RequestEnvironmentHolder<T, R extends Router<T>, V extends LayoutFactory<T>> {
-        public static <T, R extends Router<T>, V extends LayoutFactory<T>> RequestEnvironmentHolder<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environment) {
+    public static class RequestEnvironmentHolder<T, R extends Router<T>, V extends WebViews<T, R>> {
+        public static <T, R extends Router<T>, V extends WebViews<T, R>> RequestEnvironmentHolder<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environment) {
             return new RequestEnvironmentHolder<T, R, V>(environment);
         }
 
@@ -61,10 +62,10 @@ public class WebServlet extends HttpServlet {
             try {
                 R router = environment.createRouter();
                 T resource = router.parseResource(resourcePath);
-                V views = environment.createViewDefinition(router);
+                V views = environment.createViews(router);
                 Layout layout = views.createLayout(resource);
                 WebEnvironment web = new WebEnvironment(new WebRequest(req), new WebResponse(resp, layout));
-                RequestHandler<T> handler = environment.createRequestHandler(router, views, web);
+                RequestHandler<T> handler = environment.createRequestHandler(views, web);
                 handler.processRequest(resource);
             } catch (ResourceParserException ex) {
                 resp.sendError(404);

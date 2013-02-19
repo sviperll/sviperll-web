@@ -8,7 +8,11 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 
 public class MustacheFactories {
-    public static final MustacheFactory DEFAULT = new DefaultMustacheFactory();
+    private static final MustacheFactory INSTANCE = new DefaultMustacheFactory();
+
+    public static MustacheFactory getInstance() {
+        return INSTANCE;
+    }
 
     private MustacheFactories() {
     }

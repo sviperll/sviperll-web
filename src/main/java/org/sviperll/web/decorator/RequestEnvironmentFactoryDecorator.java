@@ -7,13 +7,13 @@ package org.sviperll.web.decorator;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.sviperll.web.Router;
-import org.sviperll.web.WebServlet.LayoutFactory;
+import org.sviperll.web.WebServlet.WebViews;
 import org.sviperll.web.WebServlet.RequestEnvironment;
 import org.sviperll.web.WebServlet.RequestEnvironmentFactory;
 import org.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
 
-public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extends LayoutFactory<T>> {
-    public static <T, R extends Router<T>, V extends LayoutFactory<T>> RequestEnvironmentFactoryDecorator<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
+public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extends WebViews<T, R>> {
+    public static <T, R extends Router<T>, V extends WebViews<T, R>> RequestEnvironmentFactoryDecorator<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
         return new RequestEnvironmentFactoryDecorator<T, R, V>(environmentFactory);
     }
 
@@ -34,7 +34,7 @@ public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extend
         return environmentFactory;
     }
 
-    private static class LoggingRequestEnvironmentFactory<T, R extends Router<T>, V extends LayoutFactory<T>> implements RequestEnvironmentFactory<T, R, V> {
+    private static class LoggingRequestEnvironmentFactory<T, R extends Router<T>, V extends WebViews<T, R>> implements RequestEnvironmentFactory<T, R, V> {
         private final RequestEnvironmentFactory<T, R, V> environmentFactory;
         private final Logger logger;
 
@@ -49,7 +49,7 @@ public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extend
         }
     }
 
-    private static class HttpBasicAuthenticationRequestEnvironmentFactory<T, R extends Router<T>, V extends LayoutFactory<T>> implements RequestEnvironmentFactory<T, R, V> {
+    private static class HttpBasicAuthenticationRequestEnvironmentFactory<T, R extends Router<T>, V extends WebViews<T, R>> implements RequestEnvironmentFactory<T, R, V> {
         private final RequestEnvironmentFactory<T, R, V> environmentFactory;
         private final AuthenticationCredentials credentials;
 
