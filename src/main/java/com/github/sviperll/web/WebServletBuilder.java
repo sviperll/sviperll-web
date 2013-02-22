@@ -2,13 +2,13 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.util.logging.Logger;
-import org.sviperll.web.WebServlet.WebViews;
-import org.sviperll.web.WebServlet.RequestEnvironmentFactory;
-import org.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
-import org.sviperll.web.decorator.RequestEnvironmentFactoryDecorator;
+import com.github.sviperll.web.WebServlet.WebViews;
+import com.github.sviperll.web.WebServlet.RequestEnvironmentFactory;
+import com.github.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
+import com.github.sviperll.web.decorator.RequestEnvironmentFactoryDecorator;
 
 public class WebServletBuilder {
     public static <T, R extends Router<T>, V extends WebViews<T, R>> WebServletBuilder createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
@@ -24,8 +24,8 @@ public class WebServletBuilder {
         decorator.log(logger);
     }
 
-    public void httpBasicAuthentication(AuthenticationCredentials credentials) {
-        decorator.httpBasicAuthentication(credentials);
+    public void requireHttpBasicAuthentication(AuthenticationCredentials credentials) {
+        decorator.requireHttpBasicAuthentication(credentials);
     }
 
     public WebServlet getWebServlet() {

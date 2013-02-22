@@ -2,15 +2,15 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.decorator;
+package com.github.sviperll.web.decorator;
 
 import java.io.IOException;
 import java.util.logging.Logger;
-import org.sviperll.web.Router;
-import org.sviperll.web.WebEnvironment;
-import org.sviperll.web.WebServlet.WebViews;
-import org.sviperll.web.WebServlet.RequestEnvironment;
-import org.sviperll.web.WebServlet.RequestHandler;
+import com.github.sviperll.web.Router;
+import com.github.sviperll.web.WebEnvironment;
+import com.github.sviperll.web.WebServlet.WebViews;
+import com.github.sviperll.web.WebServlet.RequestEnvironment;
+import com.github.sviperll.web.WebServlet.RequestHandler;
 
 public class LoggingRequestEnvironment<T, R extends Router<T>, V extends WebViews<T, R>> implements RequestEnvironment<T, R, V> {
     private final RequestEnvironment<T, R, V> requestEnvironment;

@@ -2,18 +2,18 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.decorator;
+package com.github.sviperll.web.decorator;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.sviperll.web.WebServlet.RequestHandler;
+import com.github.sviperll.web.WebServlet.RequestHandler;
 
-public class SingleJdbcTransactionHandler<T> implements RequestHandler<T> {
+public class IsolatedTransactionHandler<T> implements RequestHandler<T> {
     private final RequestHandler<T> handler;
     private final Connection connection;
     private final int isolationLevel;
-    public SingleJdbcTransactionHandler(RequestHandler<T> handler, Connection connection, int isolationLevel) {
+    public IsolatedTransactionHandler(RequestHandler<T> handler, Connection connection, int isolationLevel) {
         this.handler = handler;
         this.connection = connection;
         this.isolationLevel = isolationLevel;

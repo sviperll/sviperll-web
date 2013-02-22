@@ -2,13 +2,13 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.decorator;
+package com.github.sviperll.web.decorator;
 
 import java.io.IOException;
-import org.sviperll.io.Base64;
-import org.sviperll.io.Charsets;
-import org.sviperll.web.WebEnvironment;
-import org.sviperll.web.WebServlet.RequestHandler;
+import com.github.sviperll.io.Base64;
+import com.github.sviperll.io.Charsets;
+import com.github.sviperll.web.WebEnvironment;
+import com.github.sviperll.web.WebServlet.RequestHandler;
 
 public class HttpBasicAuthenticationHandler<T> implements RequestHandler<T> {
     private static final String BASIC_METHOD_STRING = "Basic";

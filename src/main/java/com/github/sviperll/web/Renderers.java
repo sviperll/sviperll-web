@@ -2,11 +2,11 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import com.github.mustachejava.Mustache;
 import java.io.Writer;
-import org.sviperll.web.Renderable.Renderer;
+import com.github.sviperll.web.Renderable.Renderer;
 
 public class Renderers {
     public static Renderer createRenderer(final Writer writer, final Mustache template, final Object scope) {

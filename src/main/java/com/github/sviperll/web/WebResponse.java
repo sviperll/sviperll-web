@@ -2,14 +2,14 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import org.sviperll.web.Renderable.Renderer;
+import com.github.sviperll.web.Renderable.Renderer;
 
 public class WebResponse extends HttpServletResponseWrapper {
     private Layout layout;

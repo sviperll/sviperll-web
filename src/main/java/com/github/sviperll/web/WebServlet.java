@@ -2,14 +2,14 @@
  * Copyright (C) 2012 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.io.Closeable;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sviperll.web.Router.ResourceParserException;
+import com.github.sviperll.web.Router.ResourceParserException;
 
 public class WebServlet extends HttpServlet {
     public static <T, R extends Router<T>, V extends WebViews<T, R>> WebServlet createInstance(RequestEnvironmentFactory<T, R, V> environment) {

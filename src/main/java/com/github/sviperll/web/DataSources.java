@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.beans.PropertyVetoException;

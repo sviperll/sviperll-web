@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -76,7 +76,11 @@ public class Parameters {
     }
 
     public String getParameterValue(String name) {
+        return getParameterValue(name, null);
+    }
+
+    public String getParameterValue(String name, String defaultValue) {
         String[] values = getParameterValues(name);
-        return values.length == 0 ? null : values[values.length - 1];
+        return values.length == 0 ? defaultValue : values[values.length - 1];
     }
 }

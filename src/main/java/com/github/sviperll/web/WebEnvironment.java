@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 public class WebEnvironment {
     private final WebRequest request;

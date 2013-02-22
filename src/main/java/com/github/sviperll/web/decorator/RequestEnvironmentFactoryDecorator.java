@@ -2,15 +2,15 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web.decorator;
+package com.github.sviperll.web.decorator;
 
 import java.io.IOException;
 import java.util.logging.Logger;
-import org.sviperll.web.Router;
-import org.sviperll.web.WebServlet.WebViews;
-import org.sviperll.web.WebServlet.RequestEnvironment;
-import org.sviperll.web.WebServlet.RequestEnvironmentFactory;
-import org.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
+import com.github.sviperll.web.Router;
+import com.github.sviperll.web.WebServlet.WebViews;
+import com.github.sviperll.web.WebServlet.RequestEnvironment;
+import com.github.sviperll.web.WebServlet.RequestEnvironmentFactory;
+import com.github.sviperll.web.decorator.HttpBasicAuthenticationHandler.AuthenticationCredentials;
 
 public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extends WebViews<T, R>> {
     public static <T, R extends Router<T>, V extends WebViews<T, R>> RequestEnvironmentFactoryDecorator<T, R, V> createInstance(RequestEnvironmentFactory<T, R, V> environmentFactory) {
@@ -26,7 +26,7 @@ public class RequestEnvironmentFactoryDecorator<T, R extends Router<T>, V extend
         environmentFactory = new LoggingRequestEnvironmentFactory<T, R, V>(environmentFactory, logger);
     }
 
-    public void httpBasicAuthentication(AuthenticationCredentials credentials) {
+    public void requireHttpBasicAuthentication(AuthenticationCredentials credentials) {
         environmentFactory = new HttpBasicAuthenticationRequestEnvironmentFactory<T, R, V>(environmentFactory, credentials);
     }
 

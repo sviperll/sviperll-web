@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +11,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sviperll.collection.ByteBufferAllocator;
-import org.sviperll.collection.ByteBufferAllocator.ByteBuffer;
+import com.github.sviperll.collection.ByteBufferAllocator;
+import com.github.sviperll.collection.ByteBufferAllocator.ByteBuffer;
 
 public class JavaClassResourceServlet extends HttpServlet {
     private static String concatPath(String base, String relative) {

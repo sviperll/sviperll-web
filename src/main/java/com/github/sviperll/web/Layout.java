@@ -2,10 +2,10 @@
  * Copyright (C) 2013 Victor Nazarov <asviraspossible@gmail.com>
  */
 
-package org.sviperll.web;
+package com.github.sviperll.web;
 
 import java.io.PrintWriter;
-import org.sviperll.web.Renderable.Renderer;
+import com.github.sviperll.web.Renderable.Renderer;
 
 public interface Layout {
     Renderer headerRenderer(PrintWriter pw);
