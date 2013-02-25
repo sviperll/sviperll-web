@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class ResourcePath {
 
-    public static ResourcePath createInstance(String path) {
+    public static ResourcePath parseResourcePath(String path) {
         if (path.equals("/"))
             return new ResourcePath(new String[] {});
         else {
@@ -16,6 +16,10 @@ public class ResourcePath {
                 path = path.substring(1);
             return new ResourcePath(path.split("/"));
         }
+    }
+
+    public static ResourcePath createInstance(String... segments) {
+        return new ResourcePath(segments);
     }
     private final String[] segments;
     public ResourcePath(String[] segments) {
@@ -47,24 +51,30 @@ public class ResourcePath {
         return true;
     }
 
-    public boolean isEmpty() {
-        return segments.length == 0;
+    public boolean matches(ResourcePath prefix, String... segmentPatterns) {
+        int prefixLength = prefix.segments.length;
+        if (segments.length != prefixLength + segmentPatterns.length)
+            return false;
+        for (int i = 0; i < segments.length; i++) {
+            String segmentPattern = i < prefixLength ? prefix.segments[i] : segmentPatterns[i - prefixLength];
+            if (!(segmentPattern == null || segments[i].equals(segmentPattern)))
+                return false;
+        }
+        return true;
     }
 
-    public ResourcePath withoutPrefix(ResourcePath prefix) {
-        if (this.segments.length < prefix.segments.length)
-            throw new IllegalArgumentException("Incorect prefix: " + prefix);
-        for (int i = 0; i < prefix.segments.length; i++)
-            if (!this.segments[i].equals(prefix.segments[i]))
-                throw new IllegalArgumentException("Incorect prefix: " + prefix);
-        String[] result = Arrays.copyOfRange(segments, prefix.segments.length, segments.length);
-        return new ResourcePath(result);
+    public boolean isEmpty() {
+        return segments.length == 0;
     }
 
     public ResourcePath subResource(String... subsegments) {
         String[] result = Arrays.copyOf(segments, segments.length + subsegments.length);
         System.arraycopy(subsegments, 0, result, segments.length, subsegments.length);
         return new ResourcePath(result);
+    }
+
+    public String path() {
+        return toString();
     }
 
     @Override
@@ -77,6 +87,18 @@ public class ResourcePath {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object thatObject) {
+        if (this == thatObject)
+            return true;
+        else if (!(thatObject instanceof ResourcePath))
+            throw new IllegalArgumentException("Object is not ResourcePath: " + thatObject);
+        else {
+            ResourcePath that = (ResourcePath)thatObject;
+            return this.matches(that);
+        }
+    }
+
     public boolean startsWith(ResourcePath prefix) {
         if (this.segments.length < prefix.segments.length)
             return false;
@@ -84,5 +106,23 @@ public class ResourcePath {
             if (!this.segments[i].equals(prefix.segments[i]))
                 return false;
         return true;
+    }
+
+    public boolean startsWith(String... segments) {
+        return startsWith(new ResourcePath(segments));
+    }
+
+    public ResourcePath withoutPrefix(ResourcePath prefix) {
+        if (this.segments.length < prefix.segments.length)
+            throw new IllegalArgumentException("Incorect prefix: " + prefix);
+        for (int i = 0; i < prefix.segments.length; i++)
+            if (!this.segments[i].equals(prefix.segments[i]))
+                throw new IllegalArgumentException("Incorect prefix: " + prefix);
+        String[] result = Arrays.copyOfRange(segments, prefix.segments.length, segments.length);
+        return new ResourcePath(result);
+    }
+
+    public ResourcePath withoutPrefix(String... segments) {
+        return withoutPrefix(new ResourcePath(segments));
     }
 }

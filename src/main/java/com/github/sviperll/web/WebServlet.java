@@ -24,7 +24,7 @@ public class WebServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        requestEnvironment.respond(ResourcePath.createInstance(req.getRequestURI()), req, resp);
+        requestEnvironment.respond(ResourcePath.parseResourcePath(req.getRequestURI()), req, resp);
     }
 
     public interface RequestHandler<T> {
@@ -68,7 +68,7 @@ public class WebServlet extends HttpServlet {
                 RequestHandler<T> handler = environment.createRequestHandler(views, web);
                 handler.processRequest(resource);
             } catch (ResourceParserException ex) {
-                resp.sendError(404);
+                resp.sendError(404, ex.getMessage());
             } finally {
                 environment.close();
             }

@@ -4,12 +4,12 @@
 
 package com.github.sviperll.web;
 
+import com.github.sviperll.web.Renderable.Renderer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import com.github.sviperll.web.Renderable.Renderer;
 
 public class WebResponse extends HttpServletResponseWrapper {
     private Layout layout;
@@ -41,6 +41,10 @@ public class WebResponse extends HttpServletResponseWrapper {
 
     public void setLayout(Layout layout) {
         this.layout = layout;
+    }
+
+    public void sendRedirect(ResourcePath path) throws IOException {
+        sendRedirect(path.toString());
     }
 
     private static class HtmlWriter extends PrintWriter {

@@ -7,6 +7,8 @@ package com.github.sviperll.web;
 public interface Router<T> extends ResourceFormatter<T> {
     T parseResource(ResourcePath path) throws ResourceParserException;
 
+    ResourcePath prefix();
+
     static class ResourceParserException extends Exception {
 
         public ResourceParserException(String message) {
