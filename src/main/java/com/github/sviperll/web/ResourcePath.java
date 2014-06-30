@@ -18,9 +18,6 @@ public class ResourcePath {
         }
     }
 
-    public static ResourcePath createInstance(String... segments) {
-        return new ResourcePath(segments);
-    }
     private final String[] segments;
     public ResourcePath(String[] segments) {
         this.segments = segments;
